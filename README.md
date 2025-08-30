@@ -94,4 +94,96 @@ LEFT JOIN payment_detail pay_detail
 GROUP BY product_category_name_english
 HAVING product_category IS NOT NULL
 ORDER BY Sales_Product_Category DESC;
+```
+## 🚚 Delivery Efficiency  
+
+```sql
+SELECT ROUND(AVG(DATEDIFF(order_delivered_customer_date, order_estimated_delivery_date)), 1) AS Delivery_efficiency
+FROM orders;
+```
+## ⏱️ Average Delivery Time  
+
+```sql
+-- Overall delivery time for delivered orders
+SELECT ROUND(AVG(DATEDIFF(order_delivered_customer_date, order_purchase_timestamp)), 1) AS Average_Delivery_Time_days
+FROM orders
+GROUP BY order_status
+HAVING order_status = 'delivered';
+
+-- Average delivery time by city
+SELECT customer_state, customer_city, ROUND(AVG(delivery_time), 1) AS avg_delivery_time
+FROM (
+    SELECT ppl.customer_zip_code_prefix, 
+           ppl.customer_city, 
+           ppl.customer_state, 
+           DATEDIFF(order_delivered_customer_date, order_purchase_timestamp) AS delivery_time
+    FROM orders ord
+    LEFT JOIN customers ppl
+        ON ord.customer_id = ppl.customer_id
+    WHERE order_status = 'delivered'
+) Delivery_by_City
+GROUP BY customer_state, customer_city
+ORDER BY avg_delivery_time DESC;
+```
+## 🏬 Key Suppliers  
+
+```sql
+SELECT s.seller_id,
+       ROUND(SUM(op.payment_value), 1) AS total_sales,
+       COUNT(DISTINCT o.order_id) AS total_orders
+FROM orders o
+JOIN order_payments op 
+    ON o.order_id = op.order_id
+JOIN order_items oi 
+    ON o.order_id = oi.order_id
+JOIN sellers s 
+    ON oi.seller_id = s.seller_id
+WHERE o.order_status = 'delivered'
+GROUP BY s.seller_id
+ORDER BY total_sales DESC
+LIMIT 10;
+```
+## 🌍 Top Markets  
+
+```sql
+SELECT c.customer_state,
+       ROUND(SUM(op.payment_value), 2) AS total_sales,
+       COUNT(DISTINCT o.order_id) AS total_orders,
+       COUNT(DISTINCT c.customer_id) AS unique_customers
+FROM orders o
+JOIN order_payments op 
+    ON o.order_id = op.order_id
+JOIN customers c 
+    ON o.customer_id = c.customer_id
+WHERE o.order_status = 'delivered'
+GROUP BY c.customer_state
+ORDER BY total_sales DESC;
+```
+## ⭐ Customer Reviews Metrics  
+
+```sql
+-- Review score distribution
+SELECT review_score,
+       COUNT(*) AS total_reviews,
+       ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM order_reviews), 1) AS percentage
+FROM order_reviews
+GROUP BY review_score
+ORDER BY review_score DESC;
+
+-- Average rating
+SELECT ROUND(AVG(review_score), 2) AS avg_review_score
+FROM order_reviews;
+
+-- Positive vs Negative reviews
+SELECT 
+    CASE 
+        WHEN review_score >= 4 THEN 'Positive'
+        WHEN review_score = 3 THEN 'Neutral'
+        ELSE 'Negative'
+    END AS review_category,
+    COUNT(*) AS total_reviews,
+    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM order_reviews), 1) AS percentage
+FROM order_reviews
+GROUP BY review_category
+ORDER BY percentage DESC;
 
