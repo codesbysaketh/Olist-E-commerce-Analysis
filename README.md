@@ -55,6 +55,7 @@ JOIN recurring_payment_orders rpo
 GROUP BY op.order_id
 ORDER BY op.order_id;
 ```
+![Order Volume by Year](./images/Order%20Volume%20by%20Year.png)
 
 ## 💵 Sales by Year  
 
