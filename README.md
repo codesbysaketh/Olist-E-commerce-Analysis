@@ -38,7 +38,7 @@ FROM orders
 GROUP BY year
 ORDER BY year ASC;
 ```
-![Order Volume by Year](./images/order_volume_by_year.png)
+![Order Volume by Year](./results/order_volume_by_year.png)
 
 ## 💳 Sequential Payments  
 
@@ -56,7 +56,7 @@ JOIN recurring_payment_orders rpo
 GROUP BY op.order_id
 ORDER BY op.order_id;
 ```
-
+![Sequential Payments](./results/Number_of sequential_payers.png)
 
 ## 💵 Sales by Year  
 
@@ -68,7 +68,7 @@ LEFT JOIN order_payments orp
 GROUP BY Year
 ORDER BY Year;
 ```
-![Sales by Year](./images/sales_by_year.png)
+![Sales by Year](./results/sales_by_year.png)
 
 ## 📦 Sales by Product Category  
 
@@ -98,7 +98,7 @@ GROUP BY product_category_name_english
 HAVING product_category IS NOT NULL
 ORDER BY Sales_Product_Category DESC;
 ```
-![Sales by Product](./images/sales_by_product.png)
+![Sales by Product](./results/sales_by_product.png)
 
 ## 🚚 Delivery Efficiency  
 
@@ -106,7 +106,7 @@ ORDER BY Sales_Product_Category DESC;
 SELECT ROUND(AVG(DATEDIFF(order_delivered_customer_date, order_estimated_delivery_date)), 1) AS Delivery_efficiency
 FROM orders;
 ```
-![Delivery Efficiency](./images/delivery_efficiency.png)
+![Delivery Efficiency](./results/delivery_efficiency.png)
 
 ## ⏱️ Average Delivery Time  
 
@@ -132,8 +132,8 @@ FROM (
 GROUP BY customer_state, customer_city
 ORDER BY avg_delivery_time DESC;
 ```
-![Overall Average Delivery Time](./images/overall_average_delivery_time.png)
-![Average Delivery Time by City](./images/average_delivery_time_by_city.png)
+![Overall Average Delivery Time](./results/overall_average_delivery_time.png)
+![Average Delivery Time by City](./results/average_delivery_time_by_city.png)
 
 ## 🏬 Key Suppliers  
 
@@ -153,7 +153,7 @@ GROUP BY s.seller_id
 ORDER BY total_sales DESC
 LIMIT 10;
 ```
-![Key Suppliers](./images/key_suppliers.png)
+![Key Suppliers](./results/key_suppliers.png)
 
 ## 🌍 Top Markets  
 
@@ -171,7 +171,7 @@ WHERE o.order_status = 'delivered'
 GROUP BY c.customer_state
 ORDER BY total_sales DESC;
 ```
-![Top Markets](./images/top_markets.png)
+![Top Markets](./results/top_markets.png)
 
 ## ⭐ Customer Reviews Metrics  
 
@@ -201,7 +201,7 @@ FROM order_reviews
 GROUP BY review_category
 ORDER BY percentage DESC;
 ```
-![Review Score Distribution](./images/review_score_distribution.png)
-![Average Review Score](./images/average_review_score.png)
-![Type of Review](./images/type_of_review.png)
+![Review Score Distribution](./results/review_score_distribution.png)
+![Average Review Score](./results/average_review_score.png)
+![Type of Review](./results/type_of_review.png)
 
