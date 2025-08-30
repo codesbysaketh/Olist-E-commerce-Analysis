@@ -23,6 +23,8 @@ WITH recurring_payment_orders AS (
     HAVING SUM(payment_sequential) > COUNT(order_id) 
 )
 
+-- SELECT COUNT(*) AS sequential_payers FROM recurring_payment_orders;
+
 SELECT op.order_id, SUM(op.payment_value) AS Total_Payment
 FROM order_payments op
 JOIN recurring_payment_orders rpo 
@@ -112,8 +114,7 @@ FROM (
         ON ord.customer_id = ppl.customer_id
     WHERE order_status = 'delivered'
 ) Delivery_by_City
-GROUP BY customer_state, customer_city
-ORDER BY avg_delivery_time DESC;
+GROUP BY customer_state, customer_city;
 
 /* Insight: Delivery routes for cities with high delivery times should be optimised */
 
