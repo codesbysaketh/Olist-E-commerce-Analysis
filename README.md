@@ -38,7 +38,7 @@ FROM orders
 GROUP BY year
 ORDER BY year ASC;
 ```
-![Order Volume by Year](./results/order_volume_by_year.png)
+![Order Volume by Year](./results/order_volume_by_Year.png)
 
 ## 💳 Sequential Payments  
 
@@ -56,7 +56,7 @@ JOIN recurring_payment_orders rpo
 GROUP BY op.order_id
 ORDER BY op.order_id;
 ```
-![Sequential Payments](./results/Number_of sequential_payers.png)
+![Sequential Payments](./results/number_of_sequential_payers.png)
 
 ## 💵 Sales by Year  
 
