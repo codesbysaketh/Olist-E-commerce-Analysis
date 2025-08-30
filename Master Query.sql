@@ -156,3 +156,40 @@ JOIN customers c
 WHERE o.order_status = 'delivered'
 GROUP BY c.customer_state
 ORDER BY total_sales DESC;
+
+
+
+/*******************************************************************************************
+* SECTION 9: Customer Reviews Metrics
+*******************************************************************************************/
+
+-- Overall review score distribution
+SELECT review_score,
+       COUNT(*) AS total_reviews,
+       ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM order_reviews), 1) AS percentage
+FROM order_reviews
+GROUP BY review_score
+ORDER BY review_score DESC;
+
+
+
+
+-- Average rating
+SELECT ROUND(AVG(review_score), 2) AS avg_review_score
+FROM order_reviews;
+
+
+
+
+-- Positive vs Negative reviews
+SELECT 
+    CASE 
+        WHEN review_score >= 4 THEN 'Positive'
+        WHEN review_score = 3 THEN 'Neutral'
+        ELSE 'Negative'
+    END AS review_category,
+    COUNT(*) AS total_reviews,
+    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM order_reviews), 1) AS percentage
+FROM order_reviews
+GROUP BY review_category
+ORDER BY percentage DESC;
